@@ -7,6 +7,34 @@ The system combines OCR, rule-based NLP and large language models to identify me
 
 ---
 
+## Website Demo
+
+### Homepage
+
+![Website Homepage](website-homepage.png)
+
+The web interface allows users to paste an English discharge summary or upload a discharge-summary image. Users can also optionally generate an LLM-based patient-friendly version using Llama 3.1.
+
+### Medical Term Detection and Explanation
+
+![Medical Terms Explained](medical-terms-explained.png)
+
+Medical terms are highlighted in the original discharge summary and linked to corresponding plain-language explanations and source sentences.
+
+### Rule-Based Patient-Friendly Version
+
+![Rule-Based Patient-Friendly Version](rule-based-patient-friendly-version.png)
+
+The rule-based baseline generates a simplified version of the discharge summary and performs internal consistency checks for terminology matching and explanation availability.
+
+### Questions to Ask Doctor
+
+![Questions to Ask Doctor](questions-to-ask-doctor.png)
+
+The system generates practical questions based on the information in the discharge summary while displaying a clear safety notice that the tool does not provide diagnosis or medical advice.
+
+---
+
 ## Project Overview
 
 Hospital discharge summaries often contain medical terminology, abbreviations and professional clinical language that can be difficult for patients without a medical background to understand.
