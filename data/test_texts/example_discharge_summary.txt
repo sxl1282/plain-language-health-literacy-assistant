@@ -1,0 +1,22 @@
+DISCHARGE SUMMARY
+
+Patient Name: Sample Patient
+
+DISCHARGE DIAGNOSES
+
+1. Hypertension.
+2. Chest pain.
+
+HOSPITAL COURSE
+
+The patient was admitted with chest pain.
+The patient was treated and improved during hospital stay.
+
+DISCHARGE MEDICATIONS
+
+1. Amlodipine 5 mg once daily.
+
+FOLLOW UP
+
+Follow-up with cardiology clinic.
+CT scan was performed and the result is pending.

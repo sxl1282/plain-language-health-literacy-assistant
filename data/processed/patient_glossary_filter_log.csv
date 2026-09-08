@@ -1,0 +1,37 @@
+medical_term,plain_language_explanation,removal_reason
+14q,A specific part of chromosome 14 called its long arm.,isolated_genomic_identifier
+18q,A specific part of chromosome 18.,isolated_genomic_identifier
+5q,A section of chromosome 5 that is long and contains genetic information.,isolated_genomic_identifier
+blood,Blood is a fluid that carries nutrients and oxygen to different parts of the body.,ambiguous_common_or_status_term
+diagnosis,Diagnosis is figuring out what is making you sick.,standalone_generic_or_workflow_term
+discharge,Fluid coming out of a body part.,standalone_generic_or_workflow_term
+discharged,Leaving the hospital or care facility after treatment.,standalone_generic_or_workflow_term
+dose,A dose is the specific amount of medicine or radiation administered at once.,standalone_unit_or_status_term
+evaluation,Assessing or judging something.,standalone_generic_or_workflow_term
+examination,Inspecting the body for signs of illness.,standalone_generic_or_workflow_term
+follow-up,Going back to see a doctor or caregiver again later.,standalone_generic_or_workflow_term
+follow up,Checking back with the doctor or caregiver later on.,standalone_generic_or_workflow_term
+follow-up,Checking back with a doctor or caregiver at a later date.,standalone_generic_or_workflow_term
+followup,Going back to your doctor for a checkup or follow-up appointment.,standalone_generic_or_workflow_term
+laboratory,A laboratory is a place where tests and experiments are conducted.,standalone_generic_or_workflow_term
+mcg,One MCG is the weight equivalent to one millionth of a gram.,standalone_unit_or_status_term
+mg,"A small amount of something, often a medication.",standalone_unit_or_status_term
+muscle,Tissue in the body that helps you move by getting shorter and longer.,common_non_jargon_example_from_annotation_guideline
+or,A place where surgeries are performed by doctors.,ambiguous_short_term
+patient,Someone being taken care of by a doctor.,standalone_generic_or_workflow_term
+pending,Waiting for something to finish or for results.,standalone_unit_or_status_term
+physical,A doctor examining a patient's body for signs of illness.,standalone_generic_or_workflow_term
+positive,Something is there.,ambiguous_common_or_status_term
+present,Present means shown.,ambiguous_common_or_status_term
+procedures,"A procedure is a medical action done to diagnose or treat a disease, like taking blood or doing surgery.",standalone_generic_or_workflow_term
+rib,The bones in your chest that protect your heart and lungs.,common_non_jargon_example_from_annotation_guideline
+sample,Taking a small part to learn about the entire thing.,standalone_generic_or_workflow_term
+snomed,A system that organizes medical terms to make them consistent and standardized.,coding_system_or_database_term
+snomed ct,A way to organize medical terms for everyone to use.,coding_system_or_database_term
+soft,Soft means not hard.,ambiguous_common_or_status_term
+status,Status means the condition or state of something.,standalone_generic_or_workflow_term
+treatment,Helping someone get better by doing something.,standalone_generic_or_workflow_term
+unit,"A unit is a way to measure how much of something there is, such as blood products or drugs.",standalone_unit_or_status_term
+units,A unit is a specific measure used for things like blood products and drugs.,standalone_unit_or_status_term
+white,White blood cells are the cells that help protect the body from infections and diseases.,ambiguous_common_or_status_term
+who,A part of the United Nations dealing with global health issues.,ambiguous_common_or_status_term

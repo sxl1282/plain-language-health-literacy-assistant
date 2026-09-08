@@ -19,3 +19,4 @@ env/
 # Environment variables
 .env
 .env.*
+data/raw/readme_exp_good.csv
