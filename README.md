@@ -142,6 +142,27 @@ The evaluation focuses on system functionality, terminology detection, output qu
 
 ---
 
+### Batch Evaluation Results
+
+The rule-based pipeline was batch-tested on **108 English discharge summaries**.
+
+| Metric | Result |
+| --- | ---: |
+| Samples processed successfully | **108 / 108 (100%)** |
+| Average text length | **2,633 characters** |
+| Average unique medical terms detected | **40.0 per summary** |
+| Median unique medical terms detected | **37.5 per summary** |
+| Average citations generated | **40.0 per summary** |
+| Samples generating 6 patient questions | **108 / 108 (100%)** |
+| Baseline consistency check passed | **60 / 108 (55.6%)** |
+| Samples with warnings | **48 / 108 (44.4%)** |
+
+All 108 discharge summaries completed the end-to-end rule-based pipeline successfully. Each detected medical term was linked to a corresponding citation, and all samples generated six suggested questions for the patient.
+
+The consistency checker flagged **46 samples for possible over-detection** and **2 samples where no glossary terms were detected**. These warnings were retained as part of the evaluation rather than removed, as they highlight an important limitation of dictionary- and rule-based medical term detection on varied clinical text.
+
+---
+
 ## Key Challenges
 
 ### Medical Information Preservation
