@@ -6,6 +6,9 @@ import re
 import streamlit as st
 
 
+SCROLL_BOX_HEIGHT = 650
+
+
 def highlight_terms_in_html_text(text, citations):
     """
     Highlight detected medical terms in escaped HTML text.

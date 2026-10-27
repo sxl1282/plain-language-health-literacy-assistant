@@ -200,29 +200,3 @@ def simplify_medical_text(text, glossary_version="filtered"):
         "medical_terms": medical_terms,
         "glossary_version": glossary_version,
     }
-
-
-if __name__ == "__main__":
-
-    test_text = """
-    The patient was admitted with chest pain.
-    Diagnosis: Hypertension.
-    Medication: Amlodipine 5mg once daily.
-    Follow-up with cardiology clinic.
-    CT scan was performed.
-    """
-
-    result = simplify_medical_text(
-        test_text,
-        glossary_version="filtered"
-    )
-
-    print("Detected Medical Terms:")
-
-    for item in result["medical_terms"]:
-        print(
-            f"- {item['term']}: {item['explanation']}"
-        )
-
-    print("\nGlossary Version:")
-    print(result["glossary_version"])

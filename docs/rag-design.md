@@ -17,17 +17,16 @@
 
 本项目的 RAG 通过结构化知识检索为生成提供上下文。
 
-## 处理链路与接口
+## 处理链路
 
-| 环节 | 输入 | 输出 / 约束 | 代码依据 |
-| --- | --- | --- | --- |
-| 文本接入 | 英文摘要或 OCR 提取文本。 | 统一文本入口；空文本返回结构化错误。 | [pipeline.py](../code_samples/pipeline.py) |
-| 术语识别 | 文本与选定术语库。 | 词边界、长短语优先、重叠消解，保留匹配位置。 | [simplifier.py](../code_samples/simplifier.py) |
-| 知识检索 | 匹配到的术语。 | `term`、`matched_text`、`explanation`、`start`、`end`。 | [simplifier.py](../code_samples/simplifier.py) |
-| 来源句关联 | 原文与术语条目。 | 原文来源句及标记，供界面核对。 | [pipeline.py](../code_samples/pipeline.py) 与 [UI 片段](../code_samples/streamlit_ui_excerpt.py) |
-| 上下文构造 | 相关术语及其解释。 | 构造 Prompt 上下文；现有实现最多传入 30 个术语。 | [grounded_rewrite_excerpt.py](../code_samples/grounded_rewrite_excerpt.py) |
-| 可选生成 | 原文、术语上下文、生成约束。 | Llama 3.1 通俗化改写；调用前对原文做常见标识遮蔽。 | [生成约束](../code_samples/grounded_rewrite_excerpt.py)、[privacy.py](../code_samples/privacy.py) |
-| 风险检查与展示 | 原文、生成文本、生成状态。 | 检查潜在无依据表述；生成失败时保留规则输出。 | [风险检查](../code_samples/faithfulness_check_excerpt.py)、[pipeline.py](../code_samples/pipeline.py) |
+1. **统一输入：** 粘贴文本或通过 OCR 获得文本，进入相同处理流程。
+2. **识别与检索：** 按词边界匹配术语，优先长短语，消除重叠并取得对应解释。
+3. **关联原文：** 将术语映射到来源句，支持高亮和解释核对。
+4. **构造上下文：** 将相关术语与解释写入 Prompt；现有实现最多传入 30 个术语。
+5. **可选改写：** 对原文做常见标识遮蔽后，结合知识上下文与约束调用 Llama 3.1。
+6. **检查与展示：** 提示潜在无依据表述；生成失败时保留规则结果。
+
+字段及状态约定集中记录在 [模块接口](delivery-and-acceptance.md#模块接口约定)，实现入口见 [代码阅读指南](../code_samples/README.md)。
 
 ## 关键生成约束
 
