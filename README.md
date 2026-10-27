@@ -1,244 +1,113 @@
-# Plain-Language Health-Literacy Assistant for Patients
+# KamalHealth AI｜医疗健康素养子模块
 
-> **Portfolio edition:** This collection presents the project, its interface, and selected implementation samples for recruiters and technical reviewers. The complete project overview and evaluation below are retained. The full runnable application, datasets, model weights, and deployment configuration are outside this collection.
+**AI 产品负责人｜2026.06–2026.09｜迪拜未来基金会支持项目**
 
-## Selected Implementation
+围绕患者出院后「看懂医疗信息 → 理解关键内容 → 准备复诊沟通」的业务流程，推进医疗健康素养子模块从需求拆解、MVP 规划、RAG 方案设计到评测迭代及原型交付。
 
-| Sample | What it demonstrates |
+产品优先解决**医学术语解释与原文溯源**，将 Llama 3.1 通俗化改写作为辅助能力，帮助患者理解既有出院信息，并整理需要向医生确认的问题。
+
+本仓库聚焦该子模块的产品决策、技术方案、AI 治理与交付验收，收录部分实现代码及界面展示。完整平台源码、知识库与内部评测明细不在公开展示范围内。
+
+## 项目成果
+
+| 评测指标 | 迭代前 | 迭代后 | 提升 |
+| --- | ---: | ---: | ---: |
+| 术语识别准确率 | 88% | **93%** | +5 个百分点 |
+| 生成摘要的平均忠实度评分 | 80% | **87%** | +7 个百分点 |
+
+以上为项目迭代评测结果；公开代码中的规则风险检查用于辅助复核，不直接计算这两项评分。
+
+交付成果包括 **Streamlit 交互原型、产品与技术说明、Baseline 与 Bad Case 迭代流程、验收标准及演示材料**。
+
+## 我的职责与关键决策
+
+| 职责 | 关键工作 | 决策与交付 |
+| --- | --- | --- |
+| **需求分析与产品规划** | 拆解术语理解、关键信息简化和就诊准备需求；综合用户价值、实施成本与医疗风险确定优先级。 | 先交付可解释、可追溯的术语解释，再提供受约束的生成式改写。[产品规划](docs/product-planning.md) |
+| **RAG 技术选型与方案设计** | 围绕结构化医学术语知识库，选择规则匹配、知识检索与 Llama 3.1 相结合的方案。 | 将匹配到的术语解释作为生成上下文，平衡忠实度、可读性、响应成本与复杂度。[方案设计](docs/rag-design.md) |
+| **AI 治理与效果迭代** | 建立覆盖术语识别、知识匹配与生成忠实度的 Baseline 评测及 Bad Case 追踪流程。 | 按知识匹配、文本处理和模型生成分类归因，迭代过滤规则与生成约束。[评测与迭代](docs/evaluation-and-iteration.md) |
+| **研发协同与交付验收** | 明确模块接口、开发里程碑、阶段交付要求与验收标准，推进开发、联调、整改及复验。 | 围绕功能完整性、稳定性、信息可追溯性与异常处理完成交付。[交付与验收](docs/delivery-and-acceptance.md) |
+
+## 业务场景与 MVP 范围
+
+**目标用户：** 需要理解英文出院摘要的非医学背景患者。
+
+| 用户问题 | MVP 能力 | 设计取舍 |
+| --- | --- | --- |
+| 「这个医学术语是什么意思？」 | 检索术语解释，展示原文高亮与来源句。 | 优先保证知识依据与可追溯性。 |
+| 「这份摘要里哪些内容我需要看懂？」 | 提供基于规则的通俗化文本，以及可选 Llama 改写。 | 保留原文入口；生成失败时仍可使用规则输出。 |
+| 「复诊时我应该问医生什么？」 | 根据原文和识别到的术语生成就诊准备问题。 | 将待确认内容组织为问题，避免替医生作出决定。 |
+| 「我只有一张出院单照片。」 | 通过 PaddleOCR 提取文本，进入同一处理流程。 | OCR 质量影响后续结果，需要核对提取内容。 |
+
+**产品边界：** 解释已有信息，不提供诊断、治疗建议、用药调整或临床决策；测试与演示使用合成或去标识化材料。
+
+## 结构化检索 RAG 方案
+
+```mermaid
+flowchart LR
+    A[英文出院文本 / 图片] --> B[文本输入 / OCR 提取]
+    B --> C[规则匹配与长短语优先]
+    K[(结构化医学术语知识库)] --> C
+    C --> D[术语解释与原文来源句]
+    D --> E[可追溯解释与规则通俗化]
+    D --> F[检索上下文 + 原文 + 生成约束]
+    F --> G[可选 Llama 3.1 改写]
+    G --> H[无依据表述风险检查]
+    E --> I[Streamlit 展示与就诊准备问题]
+    H --> I
+```
+
+本方案采用**规则匹配与结构化知识检索驱动的 RAG**：从术语知识库获得相关解释，构造 LLM 上下文，再结合原始摘要进行受约束的通俗化改写。选型围绕精准术语解释、医疗信息忠实度与原型实现成本展开。
+
+术语解释的知识依据来自术语库；页面中的来源句来自用户输入的出院摘要。两者共同帮助用户理解和核对信息，来源句链接的含义是文档溯源。
+
+技术组合：**Python · Streamlit · PaddleOCR · 规则匹配 / 结构化检索 · Llama 3.1 · Ollama**。
+
+## 原型界面
+
+以下是现有 Streamlit 子模块的界面展示，后续将结合新的项目网站素材更新。图片经过展示排版优化，功能与结果沿用原型。
+
+### 文档输入
+
+支持文本输入与图片上传；可选开启 Llama 3.1 改写，同时展示产品边界及输入隐私提示。
+
+![文档输入与产品边界](assets/screenshots/website-homepage.png)
+
+### 医学术语解释与原文溯源
+
+将医学术语与通俗解释、原文位置和来源句对应，帮助用户核对解释依据。
+
+![医学术语解释与原文溯源](assets/screenshots/medical-terms-explained.png)
+
+### 通俗化文本与一致性检查
+
+保留规则 Baseline 供对照，并展示内部一致性风险提示。
+
+![规则通俗化与一致性检查](assets/screenshots/rule-based-patient-friendly-version.png)
+
+### 就诊准备
+
+围绕原文内容整理复诊问题，并持续展示非诊疗工具的边界。
+
+![就诊准备问题](assets/screenshots/questions-to-ask-doctor.png)
+
+## 代表性代码
+
+| 样例 | 对应产品能力 |
 | --- | --- |
-| [Processing pipeline](code_samples/pipeline.py) | Orchestration of terminology detection, source citations, simplification, consistency checks, and optional Llama generation. |
-| [Medical term detection](code_samples/simplifier.py) | Phrase-level matching, word boundaries, overlapping-match resolution, and glossary selection. |
-| [Privacy masking](code_samples/privacy.py) | Best-effort masking of common identifiers before the optional language-model request. |
-| [Streamlit UI excerpts](code_samples/streamlit_ui_excerpt.py) | Escaped HTML rendering, highlighted terminology, explanation cards, and patient questions. |
-
-These are reading samples taken from the original implementation. Some imports refer to intentionally omitted modules and glossary data, so this edition is not a standalone runnable application.
-
-**Image presentation:** The interface images below are framed and enhanced for portfolio presentation from original application screenshots. They show the existing prototype; the presentation styling does not imply a redesigned or redeployed application.
-
----
-
-
-An AI-powered web application designed to help non-medical users better understand English hospital discharge summaries.
-
-The system combines OCR, rule-based NLP and large language models to identify medical terminology, provide plain-language explanations, generate a patient-friendly version of the original text, and suggest useful questions patients may ask their doctors.
-
----
-
-## Website Demo
-
-### Homepage
-
-![Website Homepage](assets/screenshots/website-homepage.png)
-
-The web interface allows users to paste an English discharge summary or upload a discharge-summary image. Users can also optionally generate an LLM-based patient-friendly version using Llama 3.1.
-
-### Medical Term Detection and Explanation
-
-![Medical Terms Explained](assets/screenshots/medical-terms-explained.png)
-
-Medical terms are highlighted in the original discharge summary and linked to corresponding plain-language explanations and source sentences.
-
-### Rule-Based Patient-Friendly Version
-
-![Rule-Based Patient-Friendly Version](assets/screenshots/rule-based-patient-friendly-version.png)
-
-The rule-based baseline generates a simplified version of the discharge summary and performs internal consistency checks for terminology matching and explanation availability.
-
-### Questions to Ask Doctor
-
-![Questions to Ask Doctor](assets/screenshots/questions-to-ask-doctor.png)
-
-The system generates practical questions based on the information in the discharge summary while displaying a clear safety notice that the tool does not provide diagnosis or medical advice.
-
----
-
-## Project Overview
-
-Hospital discharge summaries often contain medical terminology, abbreviations and professional clinical language that can be difficult for patients without a medical background to understand.
-
-This project explores how AI and NLP techniques can be used to improve the accessibility of discharge information while preserving important medical details.
-
-The application supports both:
-
-- Direct text input
-- Medical document image upload
-
-The final prototype is implemented as an interactive Streamlit web application.
-
----
-
-## Key Features
-
-- **Medical Document OCR**  
-  Extracts text from uploaded discharge-summary images using PaddleOCR.
-
-- **Medical Terminology Detection**  
-  Identifies medical terms using a curated medical glossary and rule-based matching.
-
-- **Plain-Language Explanations**  
-  Provides understandable explanations for detected medical terminology.
-
-- **Patient-Friendly Version**  
-  Generates a simplified version of the original discharge summary using both rule-based methods and an optional LLM-based approach.
-
-- **Questions to Ask the Doctor**  
-  Generates relevant questions based on information contained in the discharge summary.
-
-- **Rule-Based vs LLM Comparison**  
-  Evaluates differences between deterministic rule-based simplification and LLM-generated text.
-
-- **Safety-Oriented Design**  
-  Focuses on explaining existing information rather than generating new diagnoses or medical advice.
-
----
-
-## System Workflow
-
-**Text Input / Medical Document Image**  
-↓  
-**OCR**  
-↓  
-**Medical Term Detection**  
-↓  
-**Plain-Language Explanations**  
-↓  
-**Patient-Friendly Version**  
-↓  
-**Rule-Based / LLM-Based Processing**  
-↓  
-**Questions to Ask Doctor**  
-↓  
-**Safety Information**
-
----
-
-## Technology Stack
-
-- Python
-- Streamlit
-- PaddleOCR
-- Natural Language Processing (NLP)
-- Rule-Based Text Processing
-- Llama 3.1
-- Ollama
-- Pandas
-- Git / GitLab / GitHub
-
----
-
-## AI and Human Collaboration
-
-AI tools were used throughout the project to support:
-
-- Technical solution exploration
-- Prompt design and iteration
-- Code debugging
-- Alternative implementation analysis
-- Test-case design
-- Documentation refinement
-
-The core project decisions, including system architecture, feature design, medical-safety boundaries, evaluation strategy and final implementation decisions, were made and validated by me.
-
-LLMs were treated as development and generation tools rather than autonomous decision-makers.
-
----
-
-## Evaluation
-
-The system has been evaluated through several approaches:
-
-- Batch testing using publicly available discharge-summary data
-- Manual functional testing
-- OCR testing using medical document images
-- Rule-based and LLM output comparison
-- User-oriented evaluation of clarity and usability
-
-A dataset of **108 English discharge summaries** was used for batch evaluation.
-
-The evaluation focuses on system functionality, terminology detection, output quality, information preservation and usability rather than clinical effectiveness.
-
----
-
-### Batch Evaluation Results
-
-The rule-based pipeline was batch-tested on **108 English discharge summaries**.
-
-| Metric | Result |
-| --- | ---: |
-| Samples processed successfully | **108 / 108 (100%)** |
-| Average text length | **2,633 characters** |
-| Average unique medical terms detected | **40.0 per summary** |
-| Median unique medical terms detected | **37.5 per summary** |
-| Average citations generated | **40.0 per summary** |
-| Samples generating 6 patient questions | **108 / 108 (100%)** |
-| Baseline consistency check passed | **60 / 108 (55.6%)** |
-| Samples with warnings | **48 / 108 (44.4%)** |
-
-All 108 discharge summaries completed the end-to-end rule-based pipeline successfully. Each detected medical term was linked to a corresponding citation, and all samples generated six suggested questions for the patient.
-
-The consistency checker flagged **46 samples for possible over-detection** and **2 samples where no glossary terms were detected**. These warnings were retained as part of the evaluation rather than removed, as they highlight an important limitation of dictionary- and rule-based medical term detection on varied clinical text.
-
----
-
-## Key Challenges
-
-### Medical Information Preservation
-
-Simplifying medical text may unintentionally remove or alter important information.
-
-To reduce this risk, the system is designed to preserve important content such as:
-
-- Diagnoses
-- Medication names
-- Dosages
-- Test results
-- Follow-up information
-
-### Long and Complex Clinical Text
-
-Rule-based replacement can become less natural when processing long medical documents, while LLM-generated versions may produce more fluent language but require stronger controls to avoid information omission or over-rewriting.
-
-This project therefore compares both approaches rather than relying entirely on one method.
-
-### OCR Quality
-
-Image quality, document layout and formatting can affect OCR accuracy. OCR output is therefore treated as extracted input that may still require user verification.
-
----
-
-## My Contribution
-
-This is an independently developed MSc final project.
-
-I was responsible for:
-
-- Problem definition and requirement analysis
-- Literature and technology research
-- Dataset preparation and analysis
-- System architecture design
-- OCR integration
-- Medical terminology processing
-- Rule-based NLP implementation
-- LLM integration and prompt design
-- Streamlit interface development
-- Evaluation design
-- Functional testing
-- Result analysis
-
----
-
-## Project Status
-
-The functional Streamlit prototype has been completed and supports the main end-to-end workflow:
-
-**Document Input → OCR → Terminology Detection → Explanation → Patient-Friendly Version → Suggested Questions**
-
-Further work focuses on evaluation, robustness and analysis of limitations.
-
----
-
-## Important Notice
-
-This project is an academic prototype designed to support understanding of medical information.
-
-It does **not** provide medical diagnosis, treatment recommendations or professional medical advice. Users should consult qualified healthcare professionals when making medical decisions.
+| [术语识别与结构化检索](code_samples/simplifier.py) | 词边界匹配、长短语优先、重叠消解及词库选择。 |
+| [知识上下文与生成约束](code_samples/grounded_rewrite_excerpt.py) | 将检索到的术语解释传入 Prompt，约束无依据推断与医疗信息改写。 |
+| [生成忠实度风险检查](code_samples/faithfulness_check_excerpt.py) | 识别可能新增的治疗变动、因果解释及建议性表述；输出风险提示。 |
+| [模块处理流程](code_samples/pipeline.py) | 串联解释、溯源、规则输出、可选生成、风险检查与问题生成。 |
+| [输入隐私处理](code_samples/privacy.py) | 对常见身份标识执行尽力而为的本地遮蔽。 |
+| [Streamlit 界面片段](code_samples/streamlit_ui_excerpt.py) | 展示术语高亮、解释卡片与就诊准备问题。 |
+
+这些样例用于说明方案及关键实现，部分依赖模块与知识库未公开，不构成独立可运行的完整项目。
+
+## 局限与后续方向
+
+- 规则匹配仍可能出现语义歧义、漏匹配或过度识别，需要持续追踪 Bad Case。
+- OCR 排版误差与长文本噪声可能传导至术语检索及改写。
+- LLM 可能遗漏原文或加入无依据表述，生成约束与规则检查只能降低风险。
+- 对常见标识的遮蔽无法保证完整匿名化。
+- 原型的功能评测不构成临床验证；任何医疗决定仍需由具备资质的专业人员作出。
