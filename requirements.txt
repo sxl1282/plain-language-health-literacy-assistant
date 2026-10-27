@@ -1,9 +1,0 @@
-pandas
-numpy
-jupyter
-paddleocr
-paddlepaddle
-streamlit
-Pillow
-opencv-python
-pytest

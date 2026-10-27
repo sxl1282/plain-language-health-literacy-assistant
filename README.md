@@ -1,5 +1,22 @@
 # Plain-Language Health-Literacy Assistant for Patients
 
+> **Portfolio edition:** This collection presents the project, its interface, and selected implementation samples for recruiters and technical reviewers. The complete project overview and evaluation below are retained. The full runnable application, datasets, model weights, and deployment configuration are outside this collection.
+
+## Selected Implementation
+
+| Sample | What it demonstrates |
+| --- | --- |
+| [Processing pipeline](code_samples/pipeline.py) | Orchestration of terminology detection, source citations, simplification, consistency checks, and optional Llama generation. |
+| [Medical term detection](code_samples/simplifier.py) | Phrase-level matching, word boundaries, overlapping-match resolution, and glossary selection. |
+| [Privacy masking](code_samples/privacy.py) | Best-effort masking of common identifiers before the optional language-model request. |
+| [Streamlit UI excerpts](code_samples/streamlit_ui_excerpt.py) | Escaped HTML rendering, highlighted terminology, explanation cards, and patient questions. |
+
+These are reading samples taken from the original implementation. Some imports refer to intentionally omitted modules and glossary data, so this edition is not a standalone runnable application.
+
+**Image presentation:** The interface images below are framed and enhanced for portfolio presentation from original application screenshots. They show the existing prototype; the presentation styling does not imply a redesigned or redeployed application.
+
+---
+
 
 An AI-powered web application designed to help non-medical users better understand English hospital discharge summaries.
 
@@ -11,25 +28,25 @@ The system combines OCR, rule-based NLP and large language models to identify me
 
 ### Homepage
 
-![Website Homepage](website-homepage.png)
+![Website Homepage](assets/screenshots/website-homepage.png)
 
 The web interface allows users to paste an English discharge summary or upload a discharge-summary image. Users can also optionally generate an LLM-based patient-friendly version using Llama 3.1.
 
 ### Medical Term Detection and Explanation
 
-![Medical Terms Explained](medical-terms-explained.png)
+![Medical Terms Explained](assets/screenshots/medical-terms-explained.png)
 
 Medical terms are highlighted in the original discharge summary and linked to corresponding plain-language explanations and source sentences.
 
 ### Rule-Based Patient-Friendly Version
 
-![Rule-Based Patient-Friendly Version](rule-based-patient-friendly-version.png)
+![Rule-Based Patient-Friendly Version](assets/screenshots/rule-based-patient-friendly-version.png)
 
 The rule-based baseline generates a simplified version of the discharge summary and performs internal consistency checks for terminology matching and explanation availability.
 
 ### Questions to Ask Doctor
 
-![Questions to Ask Doctor](questions-to-ask-doctor.png)
+![Questions to Ask Doctor](assets/screenshots/questions-to-ask-doctor.png)
 
 The system generates practical questions based on the information in the discharge summary while displaying a clear safety notice that the tool does not provide diagnosis or medical advice.
 
